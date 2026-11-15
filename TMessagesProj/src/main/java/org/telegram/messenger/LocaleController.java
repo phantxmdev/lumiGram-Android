@@ -1492,6 +1492,9 @@ public class LocaleController {
     // deprecated: String key is no longer necessary
     @Deprecated
     public static String getString(String key, @StringRes int res) {
+        if (res == R.string.AppName) {
+            return "lumiGram";
+        }
         return getInstance().getStringInternal(key, res);
     }
 
@@ -1501,9 +1504,11 @@ public class LocaleController {
         if (TextUtils.isEmpty(key)) {
             return "LOC_ERR:" + key;
         }
+        if ("AppName".equals(key)) {
+            return "lumiGram";
+        }
         return getString(key, 0);
     }
-
     public static String nullable(String val) {
         if (val == null || val.startsWith("LOC_ERR")) return null;
         return val;
