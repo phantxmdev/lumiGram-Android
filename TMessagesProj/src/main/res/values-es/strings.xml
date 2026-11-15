@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="AppName">yukiGram</string>
-    <string name="AppNameBeta">yukiGram Beta</string>
+    <string name="AppName">lumiGram</string>
+    <string name="AppNameBeta">lumiGram Beta</string>
     <string name="LanguageName">Español</string>
     <string name="English">Inglés</string>
     <string name="LanguageNameInEnglish">Spanish</string>
