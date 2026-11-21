@@ -147,6 +147,15 @@ android {
     defaultConfig {
         minSdkVersion 23
         targetSdkVersion 36
+        Properties localProps = new Properties()
+        def localPropsFile = rootProject.file('local.properties')
+        if (localPropsFile.exists()) {
+            localProps.load(localPropsFile.newDataInputStream())
+        }
+
+        buildConfigField "int", "APP_ID", localProps.getProperty("APP_ID", "0")
+        buildConfigField "String", "APP_HASH", localProps.getProperty("APP_HASH", "\"\"")
+
 
         vectorDrawables.generatedDensities = ['mdpi', 'hdpi', 'xhdpi', 'xxhdpi']
 
