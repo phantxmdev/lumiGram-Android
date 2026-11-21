@@ -46,11 +46,16 @@ public class LumiGramSettingsActivity extends UniversalFragment {
 
     @Override
     protected void fillItems(ArrayList<UItem> items, UniversalAdapter adapter) {
-        // Empty screen for now, as requested
+        items.add(UItem.asHeader("Настройки"));
+        items.add(UItem.asButton(1, R.drawable.msg_palette, "Внешний вид"));
+        items.add(UItem.asShadow(null));
     }
 
     @Override
     protected void onClick(UItem item, View view, int position, float x, float y) {
+        if (item.id == 1) {
+            presentFragment(new LumiGramAppearanceActivity());
+        }
     }
 
     @Override

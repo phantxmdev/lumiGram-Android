@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <background android:drawable="@color/ic_launcher_yuki_blue_background"/>
+    <foreground>
+        <inset
+            android:drawable="@drawable/ic_launcher_yuki_purple_playstore"
+            android:insetLeft="15%"
+            android:insetRight="15%"
+            android:insetTop="15%"
+            android:insetBottom="15%" />
+    </foreground>
+</adaptive-icon>

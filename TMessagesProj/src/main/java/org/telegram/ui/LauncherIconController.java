@@ -34,38 +34,44 @@ public class LauncherIconController {
     }
 
     public enum LauncherIcon {
-        DEFAULT("DefaultIcon", R.drawable.icon_background_sa, R.mipmap.icon_foreground_sa, R.string.AppIconDefault),
-        VINTAGE("VintageIcon", R.drawable.icon_6_background_sa, R.mipmap.icon_6_foreground_sa, R.string.AppIconVintage),
-        AQUA("AquaIcon", R.drawable.icon_4_background_sa, R.mipmap.icon_foreground_sa, R.string.AppIconAqua),
-        PREMIUM("PremiumIcon", R.drawable.icon_3_background_sa, R.mipmap.icon_3_foreground_sa, R.string.AppIconPremium, true),
-        TURBO("TurboIcon", R.drawable.icon_5_background_sa, R.mipmap.icon_5_foreground_sa, R.string.AppIconTurbo, true),
-        NOX("NoxIcon", R.mipmap.icon_2_background_sa, R.mipmap.icon_foreground_sa, R.string.AppIconNox, true);
+        DEFAULT("DefaultIcon", R.drawable.ic_launcher_yuki_purple_playstore, R.drawable.ic_launcher_yuki_purple_playstore, R.string.AppIconDefault, 0xFFB388FF),
+        BLUE("YukiBlueIcon", R.drawable.ic_launcher_yuki_blue_playstore, R.drawable.ic_launcher_yuki_blue_playstore, R.string.Blue, 0xFF2196F3),
+        GOLD("YukiGoldIcon", R.drawable.ic_launcher_yuki_gold_playstore, R.drawable.ic_launcher_yuki_gold_playstore, R.string.Gold, 0xFFFFC107),
+        WAVES("YukiWavesIcon", R.drawable.ic_launcher_yuki_waves_playstore, R.drawable.ic_launcher_yuki_waves_playstore, R.string.Waves, 0xFF00BCD4),
+        RED("YukiRedIcon", R.drawable.ic_launcher_yuki_red_playstore, R.drawable.ic_launcher_yuki_red_playstore, R.string.Red, 0xFFFF3B30),
+        GREEN("YukiGreenIcon", R.drawable.ic_launcher_yuki_green_playstore, R.drawable.ic_launcher_yuki_green_playstore, R.string.Green, 0xFF34C759);
 
         public final String key;
         public final int background;
         public final int foreground;
         public final int title;
         public final boolean premium;
+        public final int previewColor;
 
         private ComponentName componentName;
 
         public ComponentName getComponentName(Context ctx) {
             if (componentName == null) {
-                componentName = new ComponentName(ctx.getPackageName(), "org.telegram.messenger." + key);
+                if (this == DEFAULT) {
+                    componentName = new ComponentName(ctx.getPackageName(), "org.telegram.messenger.DefaultIcon");
+                } else {
+                    componentName = new ComponentName(ctx.getPackageName(), "org.telegram.messenger." + key);
+                }
             }
             return componentName;
         }
 
-        LauncherIcon(String key, int background, int foreground, int title) {
-            this(key, background, foreground, title, false);
+        LauncherIcon(String key, int background, int foreground, int title, int previewColor) {
+            this(key, background, foreground, title, false, previewColor);
         }
 
-        LauncherIcon(String key, int background, int foreground, int title, boolean premium) {
+        LauncherIcon(String key, int background, int foreground, int title, boolean premium, int previewColor) {
             this.key = key;
             this.background = background;
             this.foreground = foreground;
             this.title = title;
             this.premium = premium;
+            this.previewColor = previewColor;
         }
     }
 }

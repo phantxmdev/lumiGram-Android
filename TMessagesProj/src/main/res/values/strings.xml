@@ -2447,6 +2447,8 @@
     <string name="BackgroundChoosePattern">Choose pattern</string>
     <string name="BackgroundIntensity">Intensity</string>
     <string name="Blue">Blue</string>
+    <string name="Gold">Золотой</string>
+    <string name="Waves">Циан</string>
     <string name="Red">Red</string>
     <string name="Orange">Orange</string>
     <string name="Yellow">Yellow</string>

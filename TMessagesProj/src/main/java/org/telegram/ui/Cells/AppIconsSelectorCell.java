@@ -81,7 +81,6 @@ public class AppIconsSelectorCell extends RecyclerListView implements Notificati
                 LauncherIconController.LauncherIcon icon = availableIcons.get(position);
                 holderView.bind(icon);
                 ThemeBind.selectorBackground(holderView.iconView, Theme.createSimpleSelectorRoundRectDrawable(AndroidUtilities.dp(ICONS_ROUND_RADIUS), Color.TRANSPARENT, Theme.getColor(Theme.key_listSelector), Color.BLACK), null, ThemeBind.of(Theme.key_listSelector));
-                holderView.iconView.setForeground(icon.foreground);
             }
 
             @Override
@@ -219,11 +218,12 @@ public class AppIconsSelectorCell extends RecyclerListView implements Notificati
             super(context);
 
             setOrientation(VERTICAL);
+            setClipChildren(false);
+            setClipToPadding(false);
 
             setWillNotDraw(false);
             iconView = new AdaptiveIconImageView(context);
-            iconView.setPadding(AndroidUtilities.dp(8), AndroidUtilities.dp(8), AndroidUtilities.dp(8), AndroidUtilities.dp(8));
-            addView(iconView, LayoutHelper.createLinear(58, 58, Gravity.CENTER_HORIZONTAL));
+            addView(iconView, LayoutHelper.createLinear(58, 58, Gravity.CENTER_HORIZONTAL, 0, 4, 0, 4));
 
             titleView = new TextView(context);
             titleView.setSingleLine();
@@ -234,7 +234,7 @@ public class AppIconsSelectorCell extends RecyclerListView implements Notificati
             outlinePaint.setStyle(Paint.Style.STROKE);
             outlinePaint.setStrokeWidth(Math.max(2, AndroidUtilities.dp(0.5f)));
 
-            fillPaint.setColor(Color.WHITE);
+            fillPaint.setColor(Color.TRANSPARENT);
         }
 
         @Override
@@ -289,6 +289,9 @@ public class AppIconsSelectorCell extends RecyclerListView implements Notificati
 
         private void bind(LauncherIconController.LauncherIcon icon) {
             iconView.setImageResource(icon.background);
+            iconView.setForeground(icon.foreground);
+            // Размер самолётика внутри плитки: 0 = по размеру плитки, отрицательное число = меньше
+            iconView.setBackgroundOuterPadding(AndroidUtilities.dp(-2));
 
             MarginLayoutParams params = (MarginLayoutParams) titleView.getLayoutParams();
             if (icon.premium && !UserConfig.hasPremiumOnAccounts()) {
@@ -311,8 +314,7 @@ public class AppIconsSelectorCell extends RecyclerListView implements Notificati
     public static class AdaptiveIconImageView extends ImageView {
         private Drawable foreground;
         private Path path = new Path();
-        private int outerPadding = AndroidUtilities.dp(5);
-        private int backgroundOuterPadding = AndroidUtilities.dp(42);
+        private int outerPadding = AndroidUtilities.dp(-2);
 
         public AdaptiveIconImageView(Context context) {
             super(context);
@@ -337,27 +339,64 @@ public class AppIconsSelectorCell extends RecyclerListView implements Notificati
             this.outerPadding = outerPadding;
         }
 
-        public void setBackgroundOuterPadding(int backgroundOuterPadding) {
-            this.backgroundOuterPadding = backgroundOuterPadding;
+        public void setBackgroundOuterPadding(int outerPadding) {
+            setOuterPadding(outerPadding);
         }
 
         @Override
         public void draw(Canvas canvas) {
-            canvas.save();
+            int count = canvas.saveLayer(0, 0, getWidth(), getHeight(), null);
             canvas.clipPath(path);
-            canvas.scale(1f + backgroundOuterPadding / (float) getWidth(), 1f + backgroundOuterPadding / (float) getHeight(), getWidth() / 2f, getHeight() / 2f);
             super.draw(canvas);
-            canvas.restore();
 
             if (foreground != null) {
                 foreground.setBounds(-outerPadding, -outerPadding, getWidth() + outerPadding, getHeight() + outerPadding);
                 foreground.draw(canvas);
             }
+            canvas.restoreToCount(count);
         }
 
         private void updatePath() {
             path.rewind();
-            path.addCircle(getWidth() / 2f, getHeight() / 2f, Math.min(getWidth() - getPaddingLeft() - getPaddingRight(), getHeight() - getPaddingTop() - getPaddingBottom()) / 2f, Path.Direction.CW);
+            float inset = AndroidUtilities.dp(2);
+            AndroidUtilities.rectTmp.set(inset, inset, getWidth() - inset, getHeight() - inset);
+            path.addRoundRect(AndroidUtilities.rectTmp, AndroidUtilities.dp(ICONS_ROUND_RADIUS - 1.5f), AndroidUtilities.dp(ICONS_ROUND_RADIUS - 1.5f), Path.Direction.CW);
+        }
+    }
+
+    public static class GlowingDotView extends View {
+        private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        private final Path clipPath = new Path();
+
+        public GlowingDotView(Context context) {
+            super(context);
+            setLayerType(LAYER_TYPE_SOFTWARE, null);
+        }
+
+        public void setColor(int color) {
+            paint.setColor(color);
+            paint.setShadowLayer(AndroidUtilities.dp(24), 0, 0, color);
+            invalidate();
+        }
+
+        @Override
+        protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+            super.onSizeChanged(w, h, oldw, oldh);
+            float inset = AndroidUtilities.dp(1);
+            AndroidUtilities.rectTmp.set(inset, inset, w - inset, h - inset);
+            clipPath.rewind();
+            clipPath.addRoundRect(AndroidUtilities.rectTmp, AndroidUtilities.dp(ICONS_ROUND_RADIUS), AndroidUtilities.dp(ICONS_ROUND_RADIUS), Path.Direction.CW);
+        }
+
+        @Override
+        protected void onDraw(@NonNull Canvas canvas) {
+            super.onDraw(canvas);
+            float cx = getWidth() / 2f;
+            float cy = getHeight() / 2f;
+            canvas.save();
+            canvas.clipPath(clipPath);
+            canvas.drawCircle(cx, cy, AndroidUtilities.dp(16f), paint);
+            canvas.restore();
         }
     }
 }
