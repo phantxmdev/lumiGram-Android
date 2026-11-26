@@ -318,6 +318,7 @@ public class SharedConfig {
     public static boolean allowBigEmoji;
     public static boolean useSystemEmoji;
     public static boolean useSystemBoldFont;
+    public static boolean liquidGlassEnabled = true;
     public static int fontSize = 16;
     public static boolean fontSizeIsDefault;
     public static int bubbleRadius = 17;
@@ -497,6 +498,7 @@ public class SharedConfig {
                 editor.putBoolean("hasEmailLogin", hasEmailLogin);
                 editor.putBoolean("floatingDebugActive", isFloatingDebugActive);
                 editor.putBoolean("record_via_sco", recordViaSco);
+                editor.putBoolean("liquidGlassEnabled", liquidGlassEnabled);
                 editor.apply();
             } catch (Exception e) {
                 FileLog.e(e);
@@ -619,6 +621,7 @@ public class SharedConfig {
             allowBigEmoji = preferences.getBoolean("allowBigEmoji", true);
             useSystemEmoji = preferences.getBoolean("useSystemEmoji", false);
             useSystemBoldFont = preferences.getBoolean("useSystemBoldFont", false);
+            liquidGlassEnabled = preferences.getBoolean("liquidGlassEnabled", true);
             forceForumTabs = preferences.getBoolean("forceForumTabs", false);
             fastWallpaperDisabled = preferences.getBoolean("fastWallpaperDisabled", false);
             frameMetricsEnabled = preferences.getBoolean("frameMetricsEnabled", false);
